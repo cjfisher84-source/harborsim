@@ -66,11 +66,10 @@ def handler(event, context):
     Remove PII from defanged HTML.
     
     Expects: { "deweaponized": {"safe_html": "..."} }
-    Returns: { "ok": True, "pii": {...}, ... }
+    Returns: { ..., "pii": {...} }
     """
     safe_html = event["deweaponized"]["safe_html"]
     pii_free = anonymize_html(safe_html)
-    out = event.copy()
-    out["pii"] = {"html": pii_free}
-    return response(True, **out)
+    event["pii"] = {"html": pii_free}
+    return event
 

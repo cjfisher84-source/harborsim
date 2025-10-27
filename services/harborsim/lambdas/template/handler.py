@@ -50,5 +50,13 @@ def handler(event, context):
         }
     )
 
-    return response(True, template_id=template_id, s3_key=out_key)
+    # Return metadata for Step Functions output
+    return {
+        "template_id": template_id,
+        "s3_key": out_key,
+        "templateMeta": {
+            "templateId": template_id,
+            "s3Key": out_key
+        }
+    }
 

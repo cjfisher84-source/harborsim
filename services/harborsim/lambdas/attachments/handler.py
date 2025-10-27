@@ -9,8 +9,8 @@ def handler(event, context):
     TODO: integrate ClamAV/oletools/pdf flattening (containerized if needed)
     
     Expects: { ... }
-    Returns: { "ok": True, "attachments": {...}, ... }
+    Returns: { ..., "attachments": {...} }
     """
     event["attachments"] = {"status": "no_attachments_scanned_in_stub"}
-    return response(True, **event)
+    return event
 

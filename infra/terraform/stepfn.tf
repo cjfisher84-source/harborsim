@@ -7,42 +7,27 @@ resource "aws_sfn_state_machine" "pipeline" {
     States = {
       Normalize = { 
         Type = "Task", 
-        Resource = "arn:aws:states:::lambda:invoke", 
-        Parameters = {
-          FunctionName = aws_lambda_function.normalize.arn
-        },
+        Resource = aws_lambda_function.normalize.arn,
         Next = "Deweaponize" 
       },
       Deweaponize = { 
         Type = "Task", 
-        Resource = "arn:aws:states:::lambda:invoke",
-        Parameters = {
-          FunctionName = aws_lambda_function.deweaponize.arn
-        },
+        Resource = aws_lambda_function.deweaponize.arn,
         Next = "Attachments" 
       },
       Attachments = { 
         Type = "Task", 
-        Resource = "arn:aws:states:::lambda:invoke",
-        Parameters = {
-          FunctionName = aws_lambda_function.attachments.arn
-        },
+        Resource = aws_lambda_function.attachments.arn,
         Next = "PII" 
       },
       PII = { 
         Type = "Task", 
-        Resource = "arn:aws:states:::lambda:invoke",
-        Parameters = {
-          FunctionName = aws_lambda_function.pii.arn
-        },
+        Resource = aws_lambda_function.pii.arn,
         Next = "Template" 
       },
       Template = { 
         Type = "Task", 
-        Resource = "arn:aws:states:::lambda:invoke",
-        Parameters = {
-          FunctionName = aws_lambda_function.template.arn
-        },
+        Resource = aws_lambda_function.template.arn,
         End = true 
       }
     }

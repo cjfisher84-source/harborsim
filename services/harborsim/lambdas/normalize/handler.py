@@ -14,7 +14,7 @@ def handler(event, context):
     Parse raw EML file and extract HTML content.
     
     Expects: { "s3_key": "incoming/123.eml" }
-    Returns: { "ok": True, "normalized": {...} }
+    Returns: { "normalized": {...} }
     """
     key = event["s3_key"]
     obj = s3.get_object(Bucket=RAW_BUCKET, Key=key)
@@ -23,10 +23,13 @@ def handler(event, context):
     mail = parse_from_string(raw)
     html = "".join(mail.body_html) if mail.body_html else f"<p>{mail.body}</p>"
 
-    return response(True, normalized={
+    normalized = {
         "source_hash": sha256(raw.encode("utf-8")),
         "subject": mail.subject or "",
         "html": html,
         "headers": dict(mail.headers)
-    })
+    }
+    
+    # Return with normalized key - Step Functions passes this as-is to next step
+    return {"normalized": normalized}
 

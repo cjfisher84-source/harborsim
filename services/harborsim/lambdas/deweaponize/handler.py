@@ -25,13 +25,14 @@ def handler(event, context):
     Defang HTML by removing hrefs, rewriting URLs/domains.
     
     Expects: { "normalized": {"html": "..."} }
-    Returns: { "ok": True, "deweaponized": {...}, ... }
+    Returns: { "normalized": {...}, "deweaponized": {...} }
     """
     html = event["normalized"]["html"]
     rules_text = _load_rules()
     sanitizer = Sanitizer.from_yaml(rules_text)
     safe_html = sanitizer.defang(html)
-    out = event.copy()
-    out["deweaponized"] = {"safe_html": safe_html}
-    return response(True, **out)
+    
+    # Pass through all previous data + add deweaponized
+    event["deweaponized"] = {"safe_html": safe_html}
+    return event
 
