@@ -1,0 +1,12 @@
+From: "MegaCorp Helpdesk" <support@megac0rp.example>
+To: you@example.com
+Subject: Password Expiration Alert
+MIME-Version: 1.0
+Content-Type: text/html
+
+<html>
+<body>
+<p>Your password expires today. Click <a href="http://evil.example/reset">here</a> to keep access.</p>
+</body>
+</html>
+

@@ -1,0 +1,10 @@
+*.zip
+.venv/
+__pycache__/
+.terraform/
+.terraform.lock.hcl
+*.tfstate*
+.env
+.DS_Store
+dist/
+

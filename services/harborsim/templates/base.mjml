@@ -1,0 +1,14 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="16px">
+          <strong>Training Simulation:</strong> Sanitized from a real phishing attempt.<br/><br/>
+          This template contains no live links, forms, scripts, or PII.
+        </mj-text>
+        <mj-raw>{{ SAFE_HTML }}</mj-raw>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
+

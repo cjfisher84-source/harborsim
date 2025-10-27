@@ -1,0 +1,10 @@
+defang:
+  links: remove_href  # replace href with '#'
+  bare_urls: "<URL_REMOVED>"
+  domains: "<DOMAIN_REMOVED>"
+
+block:
+  tags: [form, script, iframe]
+  attrs_regex: "^on[a-z]+$"   # onload, onclick, etc.
+  url_schemes: ["javascript:", "data:"]
+

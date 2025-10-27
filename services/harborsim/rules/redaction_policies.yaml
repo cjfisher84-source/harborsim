@@ -1,0 +1,20 @@
+pii_entities:
+  - EMAIL_ADDRESS
+  - PHONE_NUMBER
+  - PERSON
+  - CREDIT_CARD
+  - IBAN_CODE
+
+strategies:
+  default: REPLACE_WITH_TOKEN
+  exceptions:
+    - entity: PERSON
+      condition: always
+      replace_with: "<NAME>"
+
+tokens:
+  EMAIL_ADDRESS: "<EMAIL>"
+  PHONE_NUMBER: "<PHONE>"
+  CREDIT_CARD: "<CARD>"
+  IBAN_CODE: "<IBAN>"
+
