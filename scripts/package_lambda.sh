@@ -11,7 +11,7 @@ for fn in normalize deweaponize attachments pii template; do
   ZIP="${DIST}/${SERVICE}-${fn}.zip"
   rm -f "$ZIP"
   tmpdir=$(mktemp -d)
-  pip install -r "$REQ" -t "$tmpdir"
+  python3 -m pip install -r "$REQ" -t "$tmpdir"
   cp -R ${WDIR}/* "$tmpdir"/
   (cd "$tmpdir" && zip -qr "$OLDPWD/$ZIP" .)
   rm -rf "$tmpdir"
