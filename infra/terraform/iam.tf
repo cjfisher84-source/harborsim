@@ -8,7 +8,7 @@ data "aws_iam_policy_document" "lambda_trust" {
     actions = ["sts:AssumeRole"] 
     principals { 
       type = "Service" 
-      identifiers = ["lambda.amazonaws.com"] 
+      identifiers = ["lambda.amazonaws.com", "states.amazonaws.com"] 
     } 
   }
 }
@@ -22,6 +22,17 @@ resource "aws_iam_role_policy" "lambda_inline" {
         Effect = "Allow", 
         Action = ["logs:CreateLogGroup","logs:CreateLogStream","logs:PutLogEvents"], 
         Resource = "*" 
+      },
+      { 
+        Effect = "Allow", 
+        Action = ["lambda:InvokeFunction"], 
+        Resource = [
+          "${aws_lambda_function.normalize.arn}",
+          "${aws_lambda_function.deweaponize.arn}",
+          "${aws_lambda_function.attachments.arn}",
+          "${aws_lambda_function.pii.arn}",
+          "${aws_lambda_function.template.arn}"
+        ]
       },
       { 
         Effect = "Allow", 
