@@ -1,64 +1,22 @@
 """PII handler - Redact personally identifiable information."""
-from common.utils import response
-
-# Import Presidio components
-try:
-    from presidio_analyzer import AnalyzerEngine
-    from presidio_anonymizer import AnonymizerEngine
-    
-    analyzer = AnalyzerEngine()
-    anonymizer = AnonymizerEngine()
-except ImportError:
-    analyzer = None
-    anonymizer = None
-
-REPLACE_MAP = {
-    "EMAIL_ADDRESS": "<EMAIL>",
-    "PHONE_NUMBER": "<PHONE>",
-    "PERSON": "<NAME>",
-    "CREDIT_CARD": "<CARD>",
-    "IBAN_CODE": "<IBAN>"
-}
+import re
 
 
-def anonymize_html(html: str) -> str:
+def simple_pii_redact(html: str) -> str:
     """
-    Anonymize PII in HTML text.
-    
-    Note: This is a naive implementation. For production,
-    extract text from HTML and apply Presidio properly.
+    Simple PII redaction without external dependencies.
+    Uses regex patterns for basic PII detection.
     """
-    if analyzer is None or anonymizer is None:
-        # Fallback if Presidio not available
-        return html
+    # Email addresses
+    html = re.sub(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', '<EMAIL>', html)
     
-    results = analyzer.analyze(
-        text=html,
-        entities=list(REPLACE_MAP.keys()),
-        language="en"
-    )
+    # Phone numbers (basic US format)
+    html = re.sub(r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b', '<PHONE>', html)
     
-    items = []
-    for r in results:
-        items.append({
-            "entity_type": r.entity_type,
-            "start": r.start,
-            "end": r.end,
-            "operator": "replace",
-            "new_value": REPLACE_MAP.get(r.entity_type, "<REDACTED>")
-        })
+    # Credit card numbers (basic pattern)
+    html = re.sub(r'\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b', '<CARD>', html)
     
-    anonymizers_config = {
-        item["entity_type"]: {
-            "type": "replace",
-            "new_value": item["new_value"]
-        } for item in items
-    }
-    
-    return anonymizer.anonymize(
-        text=html,
-        anonymizers_config=anonymizers_config
-    ).text
+    return html
 
 
 def handler(event, context):
@@ -69,7 +27,7 @@ def handler(event, context):
     Returns: { ..., "pii": {...} }
     """
     safe_html = event["deweaponized"]["safe_html"]
-    pii_free = anonymize_html(safe_html)
+    pii_free = simple_pii_redact(safe_html)
     event["pii"] = {"html": pii_free}
     return event
 
